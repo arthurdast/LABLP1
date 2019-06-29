@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1561819878 source:e:\arthur\ufpb\lablp1\main.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
