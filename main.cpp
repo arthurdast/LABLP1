@@ -4,6 +4,10 @@
 #include <string.h>
 //END INCLUDES
 
+//DEFINE
+#define MaxListaImoveis 150
+//END DEFINE
+
 //STRUCTS
 typedef struct casa
 {
@@ -41,7 +45,7 @@ typedef struct imovel
 //FUNCTIONS
 void inicilizaImoveis(TP_IMOVEL *imoveis)
 {
-    for(int count = 0; count<150 ;count++){
+    for(int count = 0; count<MaxListaImoveis ;count++){
         imoveis[count].valor = 0;
         imoveis[count].str_apartamento.quartos = 0;
         imoveis[count].str_casa.quartos = 0;
@@ -49,12 +53,12 @@ void inicilizaImoveis(TP_IMOVEL *imoveis)
 }
 int espacoLista(TP_IMOVEL *imoveis)
 {
-    for(int count = 0; count<150 ;count++){
+    for(int count = 0; count<MaxListaImoveis ;count++){
         if(imoveis[count].valor== 0){
             return count;
         }
     }
-    return 150;
+    return MaxListaImoveis;
 }
 int menu(){
     float r = 0;
@@ -95,7 +99,7 @@ void cadastro(TP_IMOVEL *imoveis, int espaco)
     float vDOcondominio=0;
     //end variavel cadastro
 
-    if (espaco == 150){
+    if (espaco == MaxListaImoveis){
         printf("SEM ESPAÇO PARA CADASTRAMENTO DE NOVO IMOVEL \n");
         return;
     }else{
@@ -105,8 +109,9 @@ void cadastro(TP_IMOVEL *imoveis, int espaco)
             printf("(1. Terreno)  (2.Casa)  (3.Apartamento) (0.Sair)\n");
             fflush(stdin);
             scanf("%d",&tImovel);
-            if(tImovel==0)break; //Sai do cadastramento
-        }while(!(tImovel== 1 ||tImovel== 2 ||tImovel== 3));
+
+        }while(!(tImovel== 1 ||tImovel== 2 ||tImovel== 3||tImovel== 0));
+        if(tImovel==0) return; //Sair
         //Terreno
         printf("Digite o anucio do imovel.(Max 250 Letras)  \n");
         fflush(stdin);
@@ -114,7 +119,7 @@ void cadastro(TP_IMOVEL *imoveis, int espaco)
         printf("Digite a Rua do imovel.(Max 50 Letras)  \n");
         fflush(stdin);
         gets(rua);
-        printf("Digite a bairro do imovel.(Max 50 Letras)  \n");
+        printf("Digite o bairro do imovel.(Max 50 Letras)  \n");
         fflush(stdin);
         gets(bairro);
         printf("Digite a cidade do imovel.(Max 50 Letras)  \n");
@@ -126,7 +131,7 @@ void cadastro(TP_IMOVEL *imoveis, int espaco)
         printf("Digite o CEP do imovel.\n");
         fflush(stdin);
         scanf("%d",&cep);
-        printf("Digite o area do imovel.\n");
+        printf("Digite a area do imovel.\n");
         fflush(stdin);
         scanf("%d",&area);
         printf("Digite o valor do imovel.\n");
@@ -190,40 +195,43 @@ void cadastro(TP_IMOVEL *imoveis, int espaco)
     }
 }
 void editar(TP_IMOVEL *imoveis){
-    printf("Qual id deseja editar?\n");
+    printf("Qual id deseja editar?       (0 - sair)\n");
     int id;
     fflush(stdin);
     scanf("%d",&id);
+    if(id==0) return; //Sair
     cadastro(imoveis,id);
-
 }
 void remover(TP_IMOVEL *imoveis)
 {
-    printf("Qual id deseja remover?\n");
+    printf("Qual id deseja remover?      (0 - sair)\n");
     int id;
     fflush(stdin);
     scanf("%d",&id);
+    if(id==0) return; //Sair
 
-    for(int count = 0; count<150 ;count++){
+    for(int count = 0; count<MaxListaImoveis ;count++){
         if(imoveis[count].id == id){
             imoveis[count].valor = 0;
+            imoveis[count].str_apartamento.quartos = 0;
+            imoveis[count].str_casa.quartos = 0;
             printf("\n id %d remover com sucesso\n",id);
         }
     }
 }
 void consultaTodos(TP_IMOVEL *imoveis){
-    for(int count = 0; count<150 ;count++){
+    for(int count = 0; count<MaxListaImoveis ;count++){
         if(imoveis[count].valor!= 0){
             //Terreno
             printf("\nId:%d Titulo: %s\n",imoveis[count].id,imoveis[count].anucio);
             printf("Rua: %s Numero: %d Bairro: %s Cidade: %s CEP: %d\n",imoveis[count].rua,imoveis[count].numero,imoveis[count].bairro,imoveis[count].cidade,imoveis[count].cep);
             printf("Tipo: %s Area: %d Valor:%d\n",imoveis[count].tipo,imoveis[count].area,imoveis[count].valor);
             //Apartamento
-            if(imoveis[count].str_apartamento.quartos == 0){
+            if(imoveis[count].str_apartamento.quartos != 0){
                 printf("Apartamento-> Andar: %d Posicao: %s Quatos: %d \n        Valor do condominio: %f Vagas de garagem:%d \n",imoveis[count].str_apartamento.andar,imoveis[count].str_apartamento.posicao,imoveis[count].str_apartamento.quartos,imoveis[count].str_apartamento.vDOcondominio,imoveis[count].str_apartamento.vagas);
             }
             //Casa
-            if(imoveis[count].str_casa.quartos == 0){
+            if(imoveis[count].str_casa.quartos != 0){
                 printf("Casa-> Pavimento: %d Quartos:%d\n",imoveis[count].str_casa.pavimentos,imoveis[count].str_casa.quartos);
             }
             printf("\n---------------------------------------------------------------\n");
@@ -231,18 +239,18 @@ void consultaTodos(TP_IMOVEL *imoveis){
     }
 }
 void consultaVendendo(TP_IMOVEL *imoveis){
-    for(int count = 0; count<150 ;count++){
+    for(int count = 0; count<MaxListaImoveis ;count++){
         if(imoveis[count].valor!= 0 && strcmp(imoveis[count].tipo,"V") == 0  ){
             //Terreno
             printf("\nId:%d Titulo: %s\n",imoveis[count].id,imoveis[count].anucio);
             printf("Rua: %s Numero: %d Bairro: %s Cidade: %s CEP: %d\n",imoveis[count].rua,imoveis[count].numero,imoveis[count].bairro,imoveis[count].cidade,imoveis[count].cep);
             printf("Tipo: %s Area: %d Valor:%d\n",imoveis[count].tipo,imoveis[count].area,imoveis[count].valor);
             //Apartamento
-            if(imoveis[count].str_apartamento.quartos == 0){
+            if(imoveis[count].str_apartamento.quartos != 0){
                 printf("Apartamento-> Andar: %d Posicao: %s Quatos: %d \n        Valor do condominio: %f Vagas de garagem:%d \n",imoveis[count].str_apartamento.andar,imoveis[count].str_apartamento.posicao,imoveis[count].str_apartamento.quartos,imoveis[count].str_apartamento.vDOcondominio,imoveis[count].str_apartamento.vagas);
             }
             //Casa
-            if(imoveis[count].str_casa.quartos == 0){
+            if(imoveis[count].str_casa.quartos != 0){
                 printf("Casa-> Pavimento: %d Quartos:%d\n",imoveis[count].str_casa.pavimentos,imoveis[count].str_casa.quartos);
             }
             printf("\n---------------------------------------------------------------\n");
@@ -250,18 +258,18 @@ void consultaVendendo(TP_IMOVEL *imoveis){
     }
 }
 void consultaAlugando(TP_IMOVEL *imoveis){
-    for(int count = 0; count<150 ;count++){
+    for(int count = 0; count<MaxListaImoveis ;count++){
         if(imoveis[count].valor!= 0 && strcmp(imoveis[count].tipo,"A") == 0  ){
             //Terreno
             printf("\nId:%d Titulo: %s\n",imoveis[count].id,imoveis[count].anucio);
             printf("Rua: %s Numero: %d Bairro: %s Cidade: %s CEP: %d\n",imoveis[count].rua,imoveis[count].numero,imoveis[count].bairro,imoveis[count].cidade,imoveis[count].cep);
             printf("Tipo: %s Area: %d Valor:%d\n",imoveis[count].tipo,imoveis[count].area,imoveis[count].valor);
             //Apartamento
-            if(imoveis[count].str_apartamento.quartos == 0){
+            if(imoveis[count].str_apartamento.quartos != 0){
                 printf("Apartamento-> Andar: %d Posicao: %s Quatos: %d \n        Valor do condominio: %f Vagas de garagem:%d \n",imoveis[count].str_apartamento.andar,imoveis[count].str_apartamento.posicao,imoveis[count].str_apartamento.quartos,imoveis[count].str_apartamento.vDOcondominio,imoveis[count].str_apartamento.vagas);
             }
             //Casa
-            if(imoveis[count].str_casa.quartos == 0){
+            if(imoveis[count].str_casa.quartos != 0){
                 printf("Casa-> Pavimento: %d Quartos:%d\n",imoveis[count].str_casa.pavimentos,imoveis[count].str_casa.quartos);
             }
             printf("\n---------------------------------------------------------------\n");
@@ -274,18 +282,18 @@ void buscarTitulo(TP_IMOVEL *imoveis){
     fflush(stdin);
     gets(tituloB);
 
-    for(int count = 0; count<150 ;count++){
+    for(int count = 0; count<MaxListaImoveis ;count++){
         if(imoveis[count].valor!= 0 && strcmp(imoveis[count].anucio,tituloB) == 0  ){
             //Terreno
             printf("\nId:%d Titulo: %s\n",imoveis[count].id,imoveis[count].anucio);
             printf("Rua: %s Numero: %d Bairro: %s Cidade: %s CEP: %d\n",imoveis[count].rua,imoveis[count].numero,imoveis[count].bairro,imoveis[count].cidade,imoveis[count].cep);
             printf("Tipo: %s Area: %d Valor:%d\n",imoveis[count].tipo,imoveis[count].area,imoveis[count].valor);
             //Apartamento
-            if(imoveis[count].str_apartamento.quartos == 0){
+            if(imoveis[count].str_apartamento.quartos != 0){
                 printf("Apartamento-> Andar: %d Posicao: %s Quatos: %d \n        Valor do condominio: %f Vagas de garagem:%d \n",imoveis[count].str_apartamento.andar,imoveis[count].str_apartamento.posicao,imoveis[count].str_apartamento.quartos,imoveis[count].str_apartamento.vDOcondominio,imoveis[count].str_apartamento.vagas);
             }
             //Casa
-            if(imoveis[count].str_casa.quartos == 0){
+            if(imoveis[count].str_casa.quartos != 0){
                 printf("Casa-> Pavimento: %d Quartos:%d\n",imoveis[count].str_casa.pavimentos,imoveis[count].str_casa.quartos);
             }
             printf("\n---------------------------------------------------------------\n");
@@ -297,18 +305,18 @@ void buscarBairro(TP_IMOVEL *imoveis){
     printf("Qual o Bairro deseja buscar?");
     fflush(stdin);
     gets(bairroB);
-    for(int count = 0; count<150 ;count++){
+    for(int count = 0; count<MaxListaImoveis ;count++){
         if(imoveis[count].valor!= 0 && strcmp(imoveis[count].bairro,bairroB) == 0  ){
             //Terreno
             printf("\nId:%d Titulo: %s\n",imoveis[count].id,imoveis[count].anucio);
             printf("Rua: %s Numero: %d Bairro: %s Cidade: %s CEP: %d\n",imoveis[count].rua,imoveis[count].numero,imoveis[count].bairro,imoveis[count].cidade,imoveis[count].cep);
             printf("Tipo: %s Area: %d Valor:%d\n",imoveis[count].tipo,imoveis[count].area,imoveis[count].valor);
             //Apartamento
-            if(imoveis[count].str_apartamento.quartos == 0){
+            if(imoveis[count].str_apartamento.quartos != 0){
                 printf("Apartamento-> Andar: %d Posicao: %s Quatos: %d \n        Valor do condominio: %f Vagas de garagem:%d \n",imoveis[count].str_apartamento.andar,imoveis[count].str_apartamento.posicao,imoveis[count].str_apartamento.quartos,imoveis[count].str_apartamento.vDOcondominio,imoveis[count].str_apartamento.vagas);
             }
             //Casa
-            if(imoveis[count].str_casa.quartos == 0){
+            if(imoveis[count].str_casa.quartos != 0){
                 printf("Casa-> Pavimento: %d Quartos:%d\n",imoveis[count].str_casa.pavimentos,imoveis[count].str_casa.quartos);
             }
             printf("\n---------------------------------------------------------------\n");
@@ -320,18 +328,18 @@ void buscarValor(TP_IMOVEL *imoveis){
     printf("Acima de qual valor deseja buscar?");
     fflush(stdin);
     scanf("%f",&valorD);
-    for(int count = 0; count<150 ;count++){
+    for(int count = 0; count<MaxListaImoveis ;count++){
         if(imoveis[count].valor>= valorD  ){
             //Terreno
             printf("\nId:%d Titulo: %s\n",imoveis[count].id,imoveis[count].anucio);
             printf("Rua: %s Numero: %d Bairro: %s Cidade: %s CEP: %d\n",imoveis[count].rua,imoveis[count].numero,imoveis[count].bairro,imoveis[count].cidade,imoveis[count].cep);
             printf("Tipo: %s Area: %d Valor:%d\n",imoveis[count].tipo,imoveis[count].area,imoveis[count].valor);
             //Apartamento
-            if(imoveis[count].str_apartamento.quartos == 0){
+            if(imoveis[count].str_apartamento.quartos != 0){
                 printf("Apartamento-> Andar: %d Posicao: %s Quatos: %d \n        Valor do condominio: %f Vagas de garagem:%d \n",imoveis[count].str_apartamento.andar,imoveis[count].str_apartamento.posicao,imoveis[count].str_apartamento.quartos,imoveis[count].str_apartamento.vDOcondominio,imoveis[count].str_apartamento.vagas);
             }
             //Casa
-            if(imoveis[count].str_casa.quartos == 0){
+            if(imoveis[count].str_casa.quartos != 0){
                 printf("Casa-> Pavimento: %d Quartos:%d\n",imoveis[count].str_casa.pavimentos,imoveis[count].str_casa.quartos);
             }
             printf("\n---------------------------------------------------------------\n");
@@ -342,14 +350,14 @@ void salvarLista(TP_IMOVEL *imoveis)
 {
     FILE *imoveisFile;
     imoveisFile= fopen("imoveisFile.txt","w");
-    fwrite(imoveis,sizeof(TP_IMOVEL),150,imoveisFile);
+    fwrite(imoveis,sizeof(TP_IMOVEL),MaxListaImoveis,imoveisFile);
     fclose(imoveisFile);
 }
 
 void lerLista()
 {
     FILE *imoveisFile;
-    TP_IMOVEL imoveis[150];
+    TP_IMOVEL imoveis[MaxListaImoveis];
     inicilizaImoveis(imoveis);
     imoveisFile= fopen("imoveisFile.txt","r");
     if (imoveisFile == NULL)
@@ -357,7 +365,7 @@ void lerLista()
         fprintf(stderr, "\nErro ao abri o arquivo.\n");
 
     }else{
-    fread(&imoveis,sizeof(TP_IMOVEL),150,imoveisFile);
+    fread(&imoveis,sizeof(TP_IMOVEL),MaxListaImoveis,imoveisFile);
     fclose(imoveisFile);
     consultaTodos(imoveis);
 
@@ -371,9 +379,12 @@ void lerLista()
 int main()
 {
     //VARIABLES
-    TP_IMOVEL imoveis[150];
+    TP_IMOVEL imoveis[MaxListaImoveis]= {};
+
     //END VARIABLES
     inicilizaImoveis(imoveis); //Lista de struct
+
+
 
     while(true)//Loop do menu
     {
@@ -429,7 +440,8 @@ int main()
             default:
                 printf("Operacao invalida");
         }
-    system("PAUSE");
+
+    system("\nPAUSE");
     system("cls"); //limpa a tela
     }//END LOOP MENU
     return 0;
