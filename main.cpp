@@ -113,7 +113,7 @@ void cadastro(TP_IMOVEL *imoveis, int espaco)
         }while(!(tImovel== 1 ||tImovel== 2 ||tImovel== 3||tImovel== 0));
         if(tImovel==0) return; //Sair
         //Terreno
-        printf("Digite o anucio do imovel.(Max 250 Letras)  \n");
+        printf("Digite o anuncio do imovel.(Max 250 Letras)  \n");
         fflush(stdin);
         gets(anucio);
         printf("Digite a Rua do imovel.(Max 50 Letras)  \n");
@@ -125,6 +125,7 @@ void cadastro(TP_IMOVEL *imoveis, int espaco)
         printf("Digite a cidade do imovel.(Max 50 Letras)  \n");
         fflush(stdin);
         gets(cidade);
+        printf("\n\n a cidade digitada : %s \n\n",cidade);
         printf("Digite o numero do imovel.\n");
         fflush(stdin);
         scanf("%d",&numero);
@@ -152,7 +153,7 @@ void cadastro(TP_IMOVEL *imoveis, int espaco)
         imoveis[espaco].valor   =valor;
         imoveis[espaco].area    =area;
 
-
+        printf("\n\n a cidade Salva : %s \n\n",imoveis[espaco].cidade);
         //Casa
         if(tImovel==2){
             printf("Digite a quantidade de pavimentos do casa.\n");
@@ -354,21 +355,17 @@ void salvarLista(TP_IMOVEL *imoveis)
     fclose(imoveisFile);
 }
 
-void lerLista()
+void lerLista(TP_IMOVEL *imoveis)
 {
     FILE *imoveisFile;
-    TP_IMOVEL imoveis[MaxListaImoveis];
-    inicilizaImoveis(imoveis);
     imoveisFile= fopen("imoveisFile.txt","r");
     if (imoveisFile == NULL)
     {
         fprintf(stderr, "\nErro ao abri o arquivo.\n");
 
     }else{
-    fread(&imoveis,sizeof(TP_IMOVEL),MaxListaImoveis,imoveisFile);
+    fread(imoveis,sizeof(TP_IMOVEL),MaxListaImoveis,imoveisFile);
     fclose(imoveisFile);
-    consultaTodos(imoveis);
-
     }
 }
 
@@ -435,7 +432,7 @@ int main()
                 break;
             case 11:
                 printf("11c");
-                lerLista();
+                lerLista(imoveis);
                 break;
             default:
                 printf("Operacao invalida");
